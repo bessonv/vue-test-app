@@ -1,16 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <OrgTable />
+  <ModalForm />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import ModalForm from './components/ModalForm.vue'
+import OrgTable from './components/OrgTable.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld
+    ModalForm,
+    OrgTable
   }
 })
 </script>

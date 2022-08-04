@@ -1,27 +1,26 @@
 <template>
 <div class="wrapper" v-if="showTable">
-  <h2>Table</h2>
   <table class="table">
     <tr class="row-header">
       <th v-for="header in headers" :key="header.type" @click="toggleSort($event, header.type)">
         {{ header.name }}
-        <span v-if="this.sortType === header.type && this.sortAsc">↓</span>
-        <span v-if="this.sortType === header.type && !this.sortAsc">↑</span>
+        <span v-if="sortType === header.type && sortAsc">↓</span>
+        <span v-if="sortType === header.type && !sortAsc">↑</span>
       </th>
+      <th></th>
     </tr>
     <tr v-for="org in onPage" :key="org.id">
-      <td>{{ org.orgName }}</td>
-      <td>{{ org.dirName }}</td>
-      <td>{{ org.phone }}</td>
+      <OrgItem
+        :organization="org"
+        @remove="removeOrg" />
     </tr>
   </table>
   <div class="table-pagination">
     <button @click="prevPage">←</button>
-    <div>Страница {{ this.page }}</div>
+    <div>Страница {{ page }}</div>
     <button @click="nextPage">→</button>
   </div>
 </div>
-  <OrgItem />
 </template>
 
 <script lang="ts">
@@ -60,7 +59,9 @@ export default defineComponent({
   },
   mounted () {
     this.list = this.orgList
-    console.log(this.list, this.orgList)
+  },
+  updated () {
+    this.list = this.orgList
   },
   methods: {
     prevPage () {
@@ -75,9 +76,10 @@ export default defineComponent({
       }
     },
     sort (fEl: orgType, sEl: orgType) {
-      if (Object.prototype.hasOwnProperty.call(fEl, this.sortType)) {
-        const fa = fEl[this.sortType]
-        const fb = sEl[this.sortType]
+      const type = this.sortType as keyof orgType
+      if (Object.prototype.hasOwnProperty.call(fEl, type)) {
+        const fa = fEl[type]
+        const fb = sEl[type]
         const ascMult = ((this.sortAsc) ? 1 : -1)
         if (fa < fb) {
           return -1 * ascMult
@@ -93,6 +95,10 @@ export default defineComponent({
       this.sortType = sortType
       this.sortAsc = !this.sortAsc
       this.list.sort(this.sort)
+    },
+    removeOrg (id: number) {
+      console.log(id)
+      this.$emit('removeItem', id)
     }
   },
   computed: {

@@ -1,5 +1,5 @@
 <template>
-  <OrgTable />
+  <OrgTable :orgList="orgList"/>
   <ModalForm />
 </template>
 
@@ -7,9 +7,15 @@
 import { defineComponent } from 'vue'
 import ModalForm from './components/ModalForm.vue'
 import OrgTable from './components/OrgTable.vue'
+import data from './mockData'
 
 export default defineComponent({
   name: 'App',
+  data () {
+    return {
+      orgList: data
+    }
+  },
   components: {
     ModalForm,
     OrgTable

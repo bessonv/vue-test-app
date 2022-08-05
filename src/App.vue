@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="container">
-      <input type="text" v-model="searchText" @keyup="handleTextChange">
+      <input type="text" placeholder="Найти по ФИО" v-model="searchText" @keyup="handleTextChange">
       <button @click="toggleModal">Добавить</button>
     </div>
     <OrgTable :orgList="orgList" @removeItem="removeItem"/>
@@ -36,11 +36,14 @@ export default defineComponent({
   methods: {
     removeItem (id: number) {
       this.orgList = this.orgList.filter(item => item.id !== id)
-      console.log(this.orgList)
     },
     handleTextChange (e: Event) {
-      const searchText = e.target && e.target.value.toLowerCase()
-      this.orgList = orgData.filter(item => item.dirName.toLowerCase().includes(searchText))
+      const searchText = (e.target as HTMLInputElement).value
+      if (searchText) {
+        this.orgList = orgData.filter(item => item.dirName.toLowerCase().includes(searchText))
+      } else {
+        this.orgList = orgData
+      }
     },
     toggleModal () {
       this.showModal = !this.showModal
@@ -53,8 +56,7 @@ export default defineComponent({
         phone,
         dirName
       }
-      orgData.push(newOrganization)
-      this.orgList = orgData
+      this.orgList.push(newOrganization)
       this.showModal = false
     }
   }
@@ -71,23 +73,24 @@ export default defineComponent({
   margin-top: 60px;
 
   .container {
+    margin: 0 auto;
+    padding: 0 40px;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+
     input {
-      text-align: left;
-      display: inline-block;
       padding: 5px 5px;
       box-sizing: border-box;
       color: #555;
     }
 
     button {
-      text-align: right;
       color: #333;
       cursor: pointer;
       padding: 6px 8px;
       border: 1px solid #e9e9e9;
       border-radius: 4px;
-      text-decoration: none;
-      margin: 10px;
     }
   }
 }

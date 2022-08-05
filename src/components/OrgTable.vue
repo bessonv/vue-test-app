@@ -70,7 +70,6 @@ export default defineComponent({
       }
     },
     nextPage () {
-      console.log(this.page, this.elementsOnPage, Math.floor(this.list.length / this.elementsOnPage))
       if (this.page <= Math.floor(this.list.length / this.elementsOnPage)) {
         this.page++
       }
@@ -97,7 +96,6 @@ export default defineComponent({
       this.list.sort(this.sort)
     },
     removeOrg (id: number) {
-      console.log(id)
       this.$emit('removeItem', id)
     }
   },
@@ -112,7 +110,7 @@ export default defineComponent({
 <style lang="scss">
 .wrapper {
   margin: 0 auto;
-  padding: 40px;
+  padding: 10px 40px;
   max-width: 800px;
 
   .table {

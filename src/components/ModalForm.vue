@@ -4,16 +4,14 @@
       <h2>Добавить организацию</h2>
       <form>
         <label>Название:</label>
-        <input type="text" :class="{ warn: warning && !orgName }" required v-model="orgName" @keyup="isDataFilled">
-        <div class="warning" v-if="warning && !orgName">Пустое поле</div>
+        <input type="text" required v-model="orgName" @keyup="isDataFilled">
 
         <label>Номер телефона:</label>
-        <input type="text" :class="{ warn: warning && !phone }" required v-model="phone" @keyup="isDataFilled">
-        <div class="warning" v-if="warning && !phone">Пустое поле</div>
+        <input type="text" required v-model="phone" @keyup="isDataFilled">
+        <div class="warning" v-if="warning">Неверный формат номера телефона</div>
 
         <label>ФИО директора</label>
         <input type="text" :class="{ warn: warning && !dirName }" required v-model="dirName" @keyup="isDataFilled">
-        <div class="warning" v-if="warning && !dirName">Пустое поле</div>
       </form>
       <button @click="closeModal">Отмена</button>
       <button @click="saveForm" :disabled="isDisabled">Ок</button>
@@ -37,23 +35,24 @@ export default defineComponent({
   },
   methods: {
     closeModal () {
-      console.log('close')
       this.$emit('close')
     },
     saveForm () {
-      // if (this.isDataFilled()) {
-      this.$emit('save', { orgName: this.orgName, phone: this.phone, dirName: this.dirName })
-      // } else {
-      //   this.warning = true
-      // }
+      if (this.isDataFilled()) {
+        if (Number(this.phone) && this.phone.length >= 6) {
+          this.$emit('save', { orgName: this.orgName, phone: this.phone, dirName: this.dirName })
+        } else {
+          this.warning = true
+        }
+      }
     },
     isDataFilled () {
       if (this.orgName && this.phone && this.dirName) {
         this.isDisabled = false
-        return false
+        return true
       } else {
         this.isDisabled = true
-        return true
+        return false
       }
     }
   }
@@ -65,7 +64,7 @@ export default defineComponent({
       top: 0;
       left: 0;
       position: fixed;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.3);
       width: 100%;
       height: 100%;
   }
@@ -77,18 +76,14 @@ export default defineComponent({
       border-radius: 10px;
 
       form {
-        margin: 30px auto;
+        margin: 20px auto;
         text-align: left;
-        padding: 40px;
+        padding: 0 40px 20px 40px;
       }
 
       label {
-        color: #aaa;
         display: inline-block;
-        margin: 25px 0 15px;
-        font-size: 0.6em;
-        text-transform: uppercase;
-        font-weight: bold;
+        margin: 35px 0 10px;
       }
 
       input {
@@ -104,12 +99,17 @@ export default defineComponent({
       }
 
       button {
-          color: #333;
-          padding: 8px;
-          border: 1px solid #eee;
-          border-radius: 4px;
-          text-decoration: none;
-          margin: 10px;
+        cursor: pointer;
+        color: #333;
+        padding: 8px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        margin: 10px;
+        min-width: 70px;
+
+        &:disabled {
+          cursor: default;
+        }
       }
 
       .warning {
